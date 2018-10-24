@@ -44,6 +44,12 @@ class Data_base:
         """method for closing the cursor"""
         self.cur.close()
 
+class User(Data_base):
+    
+class Products(Data_base):
+
+
+
 
 
 

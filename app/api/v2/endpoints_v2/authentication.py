@@ -56,4 +56,29 @@ class SignUp(Resource):
 
             return{"message":"user created successfully"}
 
- 
+class Login(Resource):
+
+    parser =reqparse.RequestParser()
+    parser.add_argument('email')
+    parser.add_argument('password')
+
+    def post(self):
+            args = parser.parse_args()
+            email = args.get('email')
+            password = args.get('password')
+
+            user=User().fetch_by_email(email)
+
+            if not user:
+                return{"message":"User not found"},404
+
+            if not check_password_hash(user.hash_password, password):
+                return {'message': 'incorrect password'}, 401
+
+            expiry_time = datetime.timedelta(minutes =25)
+            token = create_access_token(
+                identity = user.serialize(),
+                expires_delta=expiry_time
+                )
+            return{"token":token ,"message":"User successfully logged In"}
+       

@@ -9,27 +9,32 @@ from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_r
 # request data validation
 parser =reqparse.RequestParser()
 
-parser.add_argument('sale_record_id', required=True, help='sale_record_id cannot be blank', type=str)
-parser.add_argument('user_id', required=True, help='user_id cannot be blank', type=str)
-parser.add_argument('username',required=True, help='username cannot be blank',type = str)
-parser.add_argument('cart_id', required=True, help='cart_id cannot be blank', type=int)
-parser.add_argument('sale_date',required=True, help='Username cannot be blank', type=datetime)
-parser.add_argument('total',required=True, help='total cannot be blank', type =int)
+parser.add_argument('attendant_name', required=True, help='attendant_name cannot be blank', type=str)
+parser.add_argument('product_name', required=True, help='product_name cannot be blank', type=str)
+parser.add_argument('price',required=True, help='price cannot be blank',type = int)
+parser.add_argument('total_price', required=True, help='total_price cannot be blank', type=int)
+parser.add_argument('quantity',required=True, help='quantity cannot be blank', type=int)
+
 
 class SalesRecord(Resource):
     def post(self):
         '''Posting items to sales'''        
         args = parser.parse_args()
 
-        sale_record_id = args['sale_record_id']
-        user_id = args['user_id']
-        username = args['username']
-        cart_id = args['cart_id']
-        sale_date = args['sale_date']
-        total =args['total'] 
-
+        attendant_name = args['attendant_name']
+        product_name = args['product_name']
+        price = args['price']
+        total_price = args['total_price']
+        quantity = args['quantity']
+        product_list=Product.products
+        product =[product for product in product_list if product['product_name']==product_name]
+        if not product:
+            return {"message":"Product does not exist"}
+        product[0]['quantity']= product[0]['quantity'] - quantity
+        if product[0]['quantity']<0:
+            return{"message":"Product is out of stock"}
         try:
-            my_new_sale = Sale(sale_record_id,user_id,username,cart_id,sale_date,total)
+            my_new_sale = Sale(attendant_name,product_name,price,total_price,quantity)
             new_sale = my_new_sale.post_sale()
             return make_response(jsonify({
                     'sale': new_sale

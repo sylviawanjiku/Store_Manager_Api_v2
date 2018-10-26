@@ -5,24 +5,22 @@ from datetime import datetime, timedelta
 
 class Sale():
     sales = []
-    def __init__(self,sale_record_id,user_id,username,cart_id,sale_date,total):
+    def __init__(self,attendant_name,product_name,price,total_price,quantity):
         """Instanciate the variables for my methods"""
-        self.sale_record_id =sale_record_id 
-        self.user_id = user_id
-        self.username =username
-        self.cart_id =cart_id
-        self.sale_date = sale_date =datetime.now()
-        self.total =total
+        self.attendant_name =attendant_name 
+        self.product_name = product_name
+        self.price =price
+        self.total_price =total_price
+        self.quantity = quantity 
 
     def post_sale(self):
         sale_data=dict(
             id = len(Sale.sales),
-            sale_record_id = self.sale_record_id,
-            user_id = self.user_id,
-            sale_date = self.sale_date,
-            username =self.username,
-            cart_id =self.cart_id,            
-            total =self.total
+            attendant_name = self.attendant_name,
+            product_name = self.product_name,
+            price = self.price,
+            total_price =self.total_price,
+            quantity =self.quantity, 
         )
         self.sales.append(sale_data)
         return(sale_data)

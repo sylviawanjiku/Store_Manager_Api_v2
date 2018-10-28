@@ -32,8 +32,12 @@ class Products(Resource):
         avail_stock = args['avail_stock']
         min_stock =args['min_stock']
         uom =args['uom']
-        category = args['category']   
-           
+        category = args['category']  
+
+        
+        if Product().fetch_by_id(product_id):
+            return{"message":"Product already exists"},400
+        
         try:
             my_product = Product(product_id,product_name,brand,quantity,price,avail_stock,min_stock,uom,category)
             my_product.add()

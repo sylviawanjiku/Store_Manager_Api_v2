@@ -123,7 +123,7 @@ class User(Data_base):
 
 
 class Product(Data_base):
-
+    products = []
     def __init__(self,product_id=None, product_name=None, brand=None, quantity=None, price=None,avail_stock=None ,min_stock=None, uom=None, category=None):
         super().__init__()
         self.product_id = product_id

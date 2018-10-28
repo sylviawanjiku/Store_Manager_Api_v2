@@ -123,7 +123,9 @@ class User(Data_base):
 
 
 class Product(Data_base):
+
     def __init__(self,product_id=None, product_name=None, brand=None, quantity=None, price=None,avail_stock=None ,min_stock=None, uom=None, category=None):
+        super().__init__()
         self.product_id = product_id
         self.product_name = product_name
         self.brand = brand
@@ -148,7 +150,7 @@ class Product(Data_base):
                 avail_stock INTEGER, 
                 min_stock INTEGER,
                 uom VARCHAR,                
-                category VARCHAR,
+                category VARCHAR
             );
             """
         )
@@ -160,9 +162,9 @@ class Product(Data_base):
     
     def add(self):
         """Add a product to the created table products """
-        insert_product="INSERT INTO products(product_id, product_name, brand, quantity, price,avail_stock ,min_stock, uom, category) VALUES (%s, %s, %s,%d,%d,%d,%d,%s,%s )"
+        insert_product="INSERT INTO products(product_id, product_name, brand, quantity, price,avail_stock ,min_stock, uom, category) VALUES (%s, %s, %s,%s,%s,%s,%s,%s,%s )"
         product_data = ( self.product_id,self.product_name,self.brand,self.quantity,self.price,self.avail_stock,self.min_stock,self.uom,self.category)
-        self.cur.execute(insert_product,product_data)
+        self.cur.execute(insert_product, product_data)
         self.save()
 
     def mapped_product(self,product_data):
@@ -202,7 +204,7 @@ class Product(Data_base):
     def serialize(self):
         """put the procuct data in form of a dictionary"""
         return dict(
-            id= self.id,
+            # id= self.id,
             product_id =  self.product_id,
             product_name =  self.product_name,
             brand =  self.brand,

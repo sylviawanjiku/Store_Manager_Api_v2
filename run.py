@@ -21,7 +21,7 @@ def drop():
 @app.cli.command()
 def create_admin():
     """ add admin """
-    user = User(username='Sylvia', first_name = 'Sylvia',last_name = 'Mbugua',password ='12345678', email='sylviawanjiku@gmail.com',
+    user = User(username='SylviaW', first_name = 'Sylvia',last_name = 'Mbugua',password ='Admin!23', email='sylviawanjiku@gmail.com',
                 is_admin=True)
     user.add()
     

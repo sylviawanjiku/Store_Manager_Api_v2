@@ -1,17 +1,17 @@
-import psycopg2
-id = 4
-username = "username"
-email ="email"
-password = "password"
-conn = psycopg2.connect("dbname=Storemanager user=postgres password=root host=localhost")
+# import psycopg2
+# id = 4
+# username = "username"
+# email ="email"
+# password = "password"
+# conn = psycopg2.connect("dbname=Storemanager user=postgres password=root host=localhost")
 
-try:
+# try:
   
-    cursor = conn.cursor()
+#     # cursor = conn.cursor()
 
-    cursor.execute())
-    rows = cursor.fetchone()
-    print(rows)
+#     # cursor.execute())
+#     # rows = cursor.fetchone()
+#     print("connection done")
    
-except Exception as e:
-        print("connection to database failed",e)
+# except Exception as e:
+#         print("connection to database failed",e)

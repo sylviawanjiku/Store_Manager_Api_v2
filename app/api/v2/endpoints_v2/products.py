@@ -34,10 +34,7 @@ class Products(Resource):
         uom =args['uom']
         category = args['category']  
 
-        
-        if Product().fetch_by_id(product_id):
-            return{"message":"Product already exists"},400
-        
+              
         try:
             my_product = Product(product_id,product_name,brand,quantity,price,avail_stock,min_stock,uom,category)
             my_product.add()
@@ -48,4 +45,25 @@ class Products(Resource):
             print(e)
             return{'message':'Internal server error'},500
 
-   
+    @jwt_required
+    @admin_only
+    def get(self):
+        """Get all products"""
+        products_list = Product().fetch_all_products()
+        if not products_list:
+             return make_response(jsonify)({
+            'message': 'The product list is empty'
+            }, 200) 
+        return {"message":"success","products":[product.serialize() for product in products_list]},200
+        
+    # @jwt_required
+    # @admin_only
+    # def get_single_product(self,product_id):
+    #     """Get single product"""
+    #     product = Product().fetch_by_id(product_id)
+    #     if not product:
+    #          return make_response(jsonify)({
+    #         'message': 'Product not found'
+    #         }, 404) 
+    #     return {"message":"success","product":product.serialize()},200
+        

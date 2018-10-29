@@ -183,11 +183,22 @@ class Product(Data_base):
         return self
     
     def fetch_by_id(self,product_id):
-        """fetch a single product by id"""
-        self.cur.execute("SELECT * FROM products WHERE id =%s",(product_id,))
+        """fetch a single product by product_id"""
+        self.cur.execute("SELECT * FROM products WHERE product_id = %s",(product_id,))
         selected_product = self.cur.fetchone()
         if selected_product:
             return self.mapped_product(selected_product)
+        return None
+
+    def fetch_all_products(self):
+        """ fetch all food items """
+        self.cur.execute("SELECT * FROM products")
+        products = self.cur.fetchall()
+        self.save()
+        self.close()
+
+        if products:
+            return [self.mapped_product(product) for product in products]
         return None
 
     def update(self,product_id):

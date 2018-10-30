@@ -191,6 +191,43 @@ class Product(Data_base):
         #     return self.mapped_product(selected_product)
         # return None
 
+      
+    def fetch_by_name(self,product_name):
+        """fetch a single product by product_name"""
+        self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
+        selected_product = self.cur.fetchone()
+        return selected_product
+        # if selected_product:
+        #     return self.mapped_product(selected_product)
+        # return None
+
+    def fetch_min_stock(self,product_name):
+        """fetch a single product by product_name"""
+        self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
+        selected_product = self.cur.fetchone()
+        return selected_product[6]
+        # if selected_product:
+        #     return self.mapped_product(selected_product)
+        # return None
+
+    def fetch_product_price(self,product_name):
+        """fetch a single product by product_name"""
+        self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
+        selected_product = self.cur.fetchone()
+        return selected_product[4]
+        # if selected_product:
+        #     return self.mapped_product(selected_product)
+        # return None
+
+    def fetch_product_quantity(self,product_name):
+        """fetch a single product by product_name"""
+        self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
+        selected_product = self.cur.fetchone()
+        return selected_product[3]
+        # if selected_product:
+        #     return self.mapped_product(selected_product)
+        # return None
+
     def fetch_all_products(self):
         """ fetch all food items """
         self.cur.execute("SELECT * FROM products")
@@ -232,6 +269,35 @@ class Product(Data_base):
             min_stock =  self.min_stock,
             category = self.category
         )
+class Sales(Data_base):
+    sales = []
+    def __init__(self,attendant_name = None,product_name = None,quantity = None,price = None ,total_price = None):
+        super().__init__()
+        self.attendant_name =attendant_name 
+        self.product_name = product_name
+        self.quantity = quantity 
+        self.price =price
+        self.total_price =total_price
 
+    def create(self):
+        """ create table sales """
+        self.create_table(
+            """
+            CREATE TABLE sales (
+                id serial PRIMARY KEY,
+		        attendant_name VARCHAR NOT NULL,
+                product_name VARCHAR NOT NULL,
+		        quantity INTEGER,
+                price INTEGER,
+                total_price INTEGER
+            );
+            """
+        )
 
-    
+    def drop(self):
+        """ drop table sales if it already exists """
+        self.drop_table('sales')
+        
+    def add(self):
+        """Add a sale to the created table products """
+       

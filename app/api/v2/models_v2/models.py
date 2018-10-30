@@ -177,9 +177,7 @@ class Product(Data_base):
         self.avail_stock =  product_data[5]
         self.min_stock =  product_data[6]
         self.uom =  product_data[7]
-        self.category =  product_data[8]
-        
-        
+        self.category =  product_data[8]    
         return self
     
     def fetch_by_id(self,product_id):
@@ -219,11 +217,11 @@ class Product(Data_base):
         #     return self.mapped_product(selected_product)
         # return None
 
-    def fetch_product_quantity(self,product_name):
+    def fetch_available_quantity(self,product_name):
         """fetch a single product by product_name"""
         self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
         selected_product = self.cur.fetchone()
-        return selected_product[3]
+        return selected_product[5]
         # if selected_product:
         #     return self.mapped_product(selected_product)
         # return None
@@ -300,4 +298,19 @@ class Sales(Data_base):
         
     def add(self):
         """Add a sale to the created table products """
+        insert_sale = "INSERT INTO sales(attendant_name,product_name,quantity,price,total_price) VALUES( %s, %s, %s, %s, %s)"
+        sale_data = (self.attendant_name, self.product_name, self.quantity ,self.price ,self.total_price)
+        self.cur.execute(insert_sale,sale_data)
+        self.save()
+
+    def serialize(self):
+        """put the product data in form of a dictionary"""
+        return dict(  
+            # id =self.id,        
+            attendant_name =  self.attendant_name,
+            product_name =  self.product_name,
+            quantity =  self.quantity,
+            price =  self.price,
+            total_price =  self.total_price
+        )
        

@@ -51,4 +51,4 @@ class Login(Resource):
                 expires_delta=expiry_time
                 )
             return{"token":token ,"message":"User successfully logged In"}
-       
+    

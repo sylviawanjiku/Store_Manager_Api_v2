@@ -1,7 +1,7 @@
 from werkzeug.security import generate_password_hash,check_password_hash
 
 import psycopg2
-
+from psycopg2 import extras,connect
 # local imports
 from flask import current_app
 
@@ -22,6 +22,7 @@ class Data_base:
             database =self.db_name
         )
         # open cursor for performing database operations
+        # self.cur =self.connect.cursor(cursor_factory =extras.RealDictCursor)
         self.cur =self.connect.cursor()
 
     def create_table(self,schema):
@@ -124,9 +125,8 @@ class User(Data_base):
 
 class Product(Data_base):
     products = []
-    def __init__(self,product_id=None, product_name=None, brand=None, quantity=None, price=None,avail_stock=None ,min_stock=None, uom=None, category=None):
+    def __init__(self, product_name=None, brand=None, quantity=None, price=None,avail_stock=None ,min_stock=None, uom=None, category=None):
         super().__init__()
-        self.product_id = product_id
         self.product_name = product_name
         self.brand = brand
         self.quantity =quantity
@@ -142,7 +142,6 @@ class Product(Data_base):
             """
             CREATE TABLE products (
                 id serial PRIMARY KEY,
-                product_id VARCHAR NOT NULL,
                 product_name VARCHAR NOT NULL,
                 brand VARCHAR NOT NULL,
                 quantity INTEGER,
@@ -162,61 +161,69 @@ class Product(Data_base):
     
     def add(self):
         """Add a product to the created table products """
-        insert_product="INSERT INTO products(product_id, product_name, brand, quantity, price,avail_stock ,min_stock, uom, category) VALUES (%s, %s, %s,%s,%s,%s,%s,%s,%s )"
-        product_data = ( self.product_id,self.product_name,self.brand,self.quantity,self.price,self.avail_stock,self.min_stock,self.uom,self.category)
+        insert_product="INSERT INTO products(product_name, brand, quantity, price,avail_stock ,min_stock, uom, category) VALUES (%s, %s,%s,%s,%s,%s,%s,%s )"
+        product_data = (self.product_name,self.brand,self.quantity,self.price,self.avail_stock,self.min_stock,self.uom,self.category)
         self.cur.execute(insert_product, product_data)
         self.save()
+      
 
     def mapped_product(self,product_data):
         """map the product details to an object"""
         self.id = product_data[0]
-        self.product_id =  product_data[1]
-        self.product_name =  product_data[2]
-        self.brand =  product_data[3]
-        self.quantity =  product_data[4]
-        self.price =  product_data[5]
-        self.avail_stock =  product_data[6]
-        self.min_stock =  product_data[7]
-        self.uom =  product_data[8]
-        self.category = product_data[9]
+        self.product_name =  product_data[1]
+        self.brand =  product_data[2]
+        self.quantity =  product_data[3]
+        self.price =  product_data[4]
+        self.avail_stock =  product_data[5]
+        self.min_stock =  product_data[6]
+        self.uom =  product_data[7]
+        self.category =  product_data[8]
+        
         
         return self
     
     def fetch_by_id(self,product_id):
         """fetch a single product by product_id"""
-        self.cur.execute("SELECT * FROM products WHERE product_id = %s",(product_id,))
+        self.cur.execute("SELECT * FROM products WHERE id = %s",(product_id,))
         selected_product = self.cur.fetchone()
-        if selected_product:
-            return self.mapped_product(selected_product)
-        return None
+        return selected_product
+        # if selected_product:
+        #     return self.mapped_product(selected_product)
+        # return None
 
     def fetch_all_products(self):
         """ fetch all food items """
         self.cur.execute("SELECT * FROM products")
-        products = self.cur.fetchall()
+        products = self.cur.fetchall()        
         self.save()
         self.close()
-
-        if products:
-            return [self.mapped_product(product) for product in products]
-        return None
+        return products
+      
+        # if products:
+        #     return [self.mapped_product(product) for product in products]
+        # return None
 
     def update(self,product_id):
         """update an existing product details"""
 
         self.cur.execute(
-            """ UPDATE product SET product_id =%s,product_name =%s, brand= %s,quantity= %d,price = %d, avail_stock = %d, min_stock = %d, uom = %s,category= %s WHERE id =%s""",(
-            self.product_id,self.product_name,self.brand,self.quantity,self.price,self.avail_stock,self.min_stock,self.uom,self.category)
+            """ UPDATE products SET product_name =%s, brand= %s,quantity= %s,price = %s, avail_stock = %s, min_stock = %s, uom = %s,category= %s WHERE id =%s""",(
+            self.product_name,self.brand,self.quantity,self.price,self.avail_stock,self.min_stock,self.uom,self.category,product_id)
         )
         self.save()
         self.close()
-               
-       
+    
+    def delete(self, product_id):
+        """Delete a product"""
+        self.cur.execute("DELETE FROM products where id = %s",(product_id,))
+        self.save()
+        self.close()
+    
+  
     def serialize(self):
-        """put the procuct data in form of a dictionary"""
-        return dict(
-            # id= self.id,
-            product_id =  self.product_id,
+        """put the product data in form of a dictionary"""
+        return dict(  
+            # id =self.id,        
             product_name =  self.product_name,
             brand =  self.brand,
             quantity =  self.quantity,

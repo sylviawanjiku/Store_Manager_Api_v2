@@ -52,3 +52,9 @@ class Login(Resource):
                 )
             return{"token":token ,"message":"User successfully logged In"}
     
+class Logout(Resource):
+    @jwt_required
+    def delete(self):
+            jti = get_raw_jwt()['jti']
+            blacklist.add(jti)
+            return {"msg": "Successfully logged out"}, 200

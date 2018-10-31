@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import Resource ,reqparse
 from werkzeug.security import check_password_hash
-from flask_jwt_extended import create_access_token,jwt_required ,get_jwt_identity,get_raw_jwt
+from flask_jwt_extended import create_access_token,jwt_required ,get_jwt_identity ,get_raw_jwt
 from ..models_v2.models import User
 from utils import validator
 import datetime

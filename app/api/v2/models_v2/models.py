@@ -177,9 +177,7 @@ class Product(Data_base):
         self.avail_stock =  product_data[5]
         self.min_stock =  product_data[6]
         self.uom =  product_data[7]
-        self.category =  product_data[8]
-        
-        
+        self.category =  product_data[8]    
         return self
     
     def fetch_by_id(self,product_id):
@@ -191,8 +189,45 @@ class Product(Data_base):
         #     return self.mapped_product(selected_product)
         # return None
 
+      
+    def fetch_by_name(self,product_name):
+        """fetch a single product by product_name"""
+        self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
+        selected_product = self.cur.fetchone()
+        return selected_product
+        # if selected_product:
+        #     return self.mapped_product(selected_product)
+        # return None
+
+    def fetch_min_stock(self,product_name):
+        """fetch a single product by product_name"""
+        self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
+        selected_product = self.cur.fetchone()
+        return selected_product[6]
+        # if selected_product:
+        #     return self.mapped_product(selected_product)
+        # return None
+
+    def fetch_product_price(self,product_name):
+        """fetch a single product by product_name"""
+        self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
+        selected_product = self.cur.fetchone()
+        return selected_product[4]
+        # if selected_product:
+        #     return self.mapped_product(selected_product)
+        # return None
+
+    def fetch_available_quantity(self,product_name):
+        """fetch a single product by product_name"""
+        self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
+        selected_product = self.cur.fetchone()
+        return selected_product[5]
+        # if selected_product:
+        #     return self.mapped_product(selected_product)
+        # return None
+
     def fetch_all_products(self):
-        """ fetch all food items """
+        """ fetch all products"""
         self.cur.execute("SELECT * FROM products")
         products = self.cur.fetchall()        
         self.save()
@@ -212,6 +247,16 @@ class Product(Data_base):
         )
         self.save()
         self.close()
+
+    # def update_quantity(self,product_name):
+    #     """update an existing product details"""
+
+    #     self.cur.execute(
+    #         """ UPDATE products SET quantity= %s WHERE product_name =%s""",(
+    #         self.quantity,product_name)
+    #     )
+    #     self.save()
+    #     self.close()
     
     def delete(self, product_id):
         """Delete a product"""
@@ -232,6 +277,66 @@ class Product(Data_base):
             min_stock =  self.min_stock,
             category = self.category
         )
+class Sales(Data_base):
+    sales = []
+    def __init__(self,attendant_name = None,product_name = None,quantity = None,price = None ,total_price = None):
+        super().__init__()
+        self.attendant_name =attendant_name 
+        self.product_name = product_name
+        self.quantity = quantity 
+        self.price =price
+        self.total_price =total_price
 
+    def create(self):
+        """ create table sales """
+        self.create_table(
+            """
+            CREATE TABLE sales (
+                id serial PRIMARY KEY,
+		        attendant_name VARCHAR NOT NULL,
+                product_name VARCHAR NOT NULL,
+		        quantity INTEGER,
+                price INTEGER,
+                total_price INTEGER
+            );
+            """
+        )
 
-    
+    def drop(self):
+        """ drop table sales if it already exists """
+        self.drop_table('sales')
+        
+    def add(self):
+        """Add a sale to the created table products """
+        insert_sale = "INSERT INTO sales(attendant_name,product_name,quantity,price,total_price) VALUES( %s, %s, %s, %s, %s)"
+        sale_data = (self.attendant_name, self.product_name, self.quantity ,self.price ,self.total_price)
+        self.cur.execute(insert_sale,sale_data)
+        self.save()
+
+    def fetch_all_sales(self):
+        """ fetch all sales """
+        self.cur.execute("SELECT * FROM sales")
+        sales = self.cur.fetchall()        
+        self.save()
+        self.close()
+        return sales
+
+    def fetch_all_sales_attendant_name(self,attendant_name):
+        """ fetch all sales """
+        self.cur.execute("SELECT * FROM sales")
+        sales = self.cur.fetchall()        
+        self.save()
+        self.close()
+        return sales
+
+    def serialize(self):
+        """put the product data in form of a dictionary"""
+        return dict(  
+            # id =self.id,        
+            attendant_name =  self.attendant_name,
+            product_name =  self.product_name,
+            quantity =  self.quantity,
+            price =  self.price,
+            total_price =  self.total_price
+        )
+       

@@ -13,7 +13,7 @@ parser.add_argument('email',type=str, required=True, help="This field can not be
 parser.add_argument('first_name',type=str, required=True, help="This field can not be left bank")
 parser.add_argument('last_name',type=str, required=True, help="This field can not be left bank")
 parser.add_argument('password', required=True, help="This field can not be left bank")
-parser.add_argument('is_admin', required=True, help="This field can not be left bank")
+parser.add_argument('is_admin')
 
 
 class SignUp(Resource):
@@ -24,8 +24,9 @@ class SignUp(Resource):
             username = args.get('username')
             first_name= args.get('first_name')
             last_name = args.get('last_name')
-            email = args.get('email')
             password = args.get('password')
+            email = args.get('email')
+          
 
             validate = validator.Validators()
 
@@ -50,7 +51,7 @@ class SignUp(Resource):
             if User().fetch_by_username(username):
                 return{"message":"User already exists"},400
 
-            user =User(username, email, first_name, last_name, password)       
+            user =User(username,first_name, last_name, password,email)       
             user.add()
 
             return{"message":"user created successfully"},201

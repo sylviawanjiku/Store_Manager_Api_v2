@@ -80,9 +80,9 @@ class Get_Sales_Admin(Resource):
 
 class Get_Sales_Attendant(Resource):
     @jwt_required
-    def get(self,attendant_name):
+    def get(self):
         """Get all sales"""
-        sales_list = Sales().fetch_all_sales_attendant_name(attendant_name)
+        sales_list = Sales().fetch_all_sales_attendant_name(get_jwt_identity()["username"])
         if not sales_list:
             return {
             'message': 'The sales list is empty'

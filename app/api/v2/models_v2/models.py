@@ -22,8 +22,8 @@ class Data_base:
             database =self.db_name
         )
         # open cursor for performing database operations
-        # self.cur =self.connect.cursor(cursor_factory =extras.RealDictCursor)
-        self.cur =self.connect.cursor()
+        self.cur =self.connect.cursor(cursor_factory =extras.RealDictCursor)
+        # self.cur =self.connect.cursor()
 
     def create_table(self,schema):
         """method for creating tables"""
@@ -68,7 +68,8 @@ class User(Data_base):
                 email  VARCHAR NOT NULL,                
                 is_admin BOOLEAN NOT NULL
             );
-        )""")
+        """
+        )
 
     def drop(self):
         """Drop the table for users if it exists""" 
@@ -80,6 +81,17 @@ class User(Data_base):
         user_data = (self.username, self.first_name, self.last_name ,self.hash_password ,self.email,self.is_admin)
         self.cur.execute(insert_user,user_data)
         self.save()
+
+    
+    def is_admin(self,username):
+        self.cur.execute("SELECT * FROM users WHERE username =%s", (username,))
+        selected_user = self.cur.fetchone()
+        if selected_user:
+            if selected_user["is_admin"] == True :
+                return True
+            return False
+        return False
+
 
     def mapped_user(self, user_data):
         """Map a user to an object"""
@@ -98,17 +110,19 @@ class User(Data_base):
         "Fetch a user through email"
         self.cur.execute("SELECT * FROM users WHERE email =%s", (email,))
         selected_user = self.cur.fetchone()
-        if selected_user:
-            return self.mapped_user(selected_user)
-        return None
+        return selected_user
+        # if selected_user:
+        #     return self.mapped_user(selected_user)
+        # return None
 
     def fetch_by_username(self,username):
         "Fetch a user through username"
         self.cur.execute("SELECT * FROM users WHERE username =%s", (username,))
         selected_user = self.cur.fetchone()
-        if selected_user:
-            return self.mapped_user(selected_user)
-        return None
+        return selected_user
+        # if selected_user:
+        #     return self.mapped_user(selected_user)
+        # return None
 
     def serialize(self):
         """put the user_data into a dictionary form"""

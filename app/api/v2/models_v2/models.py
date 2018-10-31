@@ -227,7 +227,7 @@ class Product(Data_base):
         # return None
 
     def fetch_all_products(self):
-        """ fetch all food items """
+        """ fetch all products"""
         self.cur.execute("SELECT * FROM products")
         products = self.cur.fetchall()        
         self.save()
@@ -312,6 +312,22 @@ class Sales(Data_base):
         sale_data = (self.attendant_name, self.product_name, self.quantity ,self.price ,self.total_price)
         self.cur.execute(insert_sale,sale_data)
         self.save()
+
+    def fetch_all_sales(self):
+        """ fetch all sales """
+        self.cur.execute("SELECT * FROM sales")
+        sales = self.cur.fetchall()        
+        self.save()
+        self.close()
+        return sales
+
+    def fetch_all_sales_attendant_name(self,attendant_name):
+        """ fetch all sales """
+        self.cur.execute("SELECT * FROM sales")
+        sales = self.cur.fetchall()        
+        self.save()
+        self.close()
+        return sales
 
     def serialize(self):
         """put the product data in form of a dictionary"""

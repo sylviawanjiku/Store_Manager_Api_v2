@@ -18,7 +18,7 @@ parser.add_argument('quantity',required=True, help='quantity cannot be blank', t
 
 class SalesRecord(Resource):
     def post(self):
-        '''Posting items to sales'''        
+        """Posting items to sales"""      
         args = parser.parse_args()
 
         attendant_name = args['attendant_name']

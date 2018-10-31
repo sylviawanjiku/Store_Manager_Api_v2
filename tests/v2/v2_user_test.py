@@ -1,17 +1,8 @@
+
 import json
 import unittest
 from database_tests import migrate, drop, create_admin
 from app.apps import create_app
-
-class BaseTest(unittest.TestCase):
-    def setUp(self):
-        self.app = create_app(config_name="testing")
-        """make app testable"""
-        self.client = self.app.test_client()
-        with self.app.app_context():
-            drop()
-            migrate()
-            create_admin()        
 
         self.admin_data ={'username':'sylvia','first_name':'Sylvie','last_name':'Mbugua','email':'sylviawanjiku@gmail.com','password':"Admin!23!"}
         self.register_user_without_email ={'username':'sylvia','first_name':'Sylvie','last_name':'Mbugua','email':'','password':D123456}
@@ -22,6 +13,7 @@ class BaseTest(unittest.TestCase):
         self.admin_login_data ={'email':'sylviawanjiku@gmail.com','password':"Admin!23!"}
         self.user_login_data ={'email':'spongebob@gmail.com','password':"123456!"}
         
+
     
     def test_register_user(self):
         '''Test API can create a new user (POST request)'''
@@ -64,6 +56,5 @@ class BaseTest(unittest.TestCase):
         """Test method to login admin"""
         login_user = self.client.post('/api/v2/signup',data = json.dumps(self.user_login_data),content_type = 'application/json')        
         result = json.loads(login_user.data.decode())
-        self.assertEqual(login_user.status_code, 400)
+        self.assertEqual(login_user.status_code, 400)    
 
-   

@@ -3,7 +3,7 @@ from flask_restful import Api
 from .api.v1 import version1 as v1
 from .api.v2 import version2 as v2
 from flask_jwt_extended import JWTManager
-
+from .api.v2.endpoints_v2.authentication import blacklist
 from instance.config import app_config
 
 # The create_app function wraps the creation of a new Flask object, and returns it after it's loaded up with configuration settings
@@ -18,8 +18,13 @@ def create_app(config_name):
     app.register_blueprint(v2)
 # jwt initialization
     app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
+    app.config['JWT_BLACKLIST_ENABLED'] = True
+    app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
     jwt = JWTManager(app)
-    
 
+    @jwt.token_in_blacklist_loader
+    def check_if_token_in_blacklist(decrypted_token):
+        jti = decrypted_token['jti']
+        return jti in blacklist
 
     return app

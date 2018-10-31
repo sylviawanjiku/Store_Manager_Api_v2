@@ -5,10 +5,19 @@ from flask_jwt_extended import (jwt_required, create_access_token,get_jwt_identi
 from .authentication import admin_only
 from functools import wraps
 from .products import Single_Product
+from psycopg2 import extras,connect
+import psycopg2
 
-
+  # connect to the storemanager database
+connect = psycopg2.connect(
+    host="localhost",
+    user= "postgres",
+    password ="root",
+    database ="Storemanager"
+)
 # request data validation
 parser =reqparse.RequestParser()
+cur = connect.cursor()
 
 parser.add_argument('product_name', required=True, help='product_name cannot be blank', type=str)
 parser.add_argument('quantity',required=True, help='quantity cannot be blank', type=int)
@@ -21,7 +30,7 @@ class Sale(Resource):
         product_name = args['product_name']
         quantity = args['quantity']
         
-        attendant_name = get_jwt_identity()
+        attendant_name = get_jwt_identity()["username"]
         product = Product().fetch_by_name(product_name)
         if not product:
             return {
@@ -32,20 +41,25 @@ class Sale(Resource):
         available_quantity = Product().fetch_available_quantity(product_name)
         if quantity <= min_stock:
             return{"message":"Products running out of stock"}
-       
-        # product[0]['quantity']= product[0]['quantity'] - quantity
-        # if product[0]['quantity']<0:
-        #     return{"message":"Product is out of stock"}
+        if quantity > available_quantity:
+            return{"message":"Product is out of stock"}        
         available_quantity = available_quantity - quantity 
-        if available_quantity <= min_stock:
-            return{"message":"Products running out of stock"}
-        if available_quantity < quantity:
-             return{"message":"Cannot make sale"}
+
+        cur.execute(
+            """ UPDATE products SET avail_stock= %s WHERE product_name =%s""",(available_quantity,product_name))
+        connect.commit()
+       
+        # if available_quantity <= min_stock:
+        #     return{"message":"Products running out of stock"} 
+
         try:                         
             total_price = price * quantity
-            my_new_sale = Sales(attendant_name,product_name,quantity,price,total_price)
-            my_new_sale.add()
-            return{"message":"Sale added successfully", "sale": my_new_sale.serialize()}, 201
+            """Add a sale to the created table products """
+            insert_sale = "INSERT INTO sales(attendant_name,product_name,quantity,price,total_price) VALUES( %s, %s, %s, %s, %s)"
+            sale_data = (attendant_name, product_name, quantity ,price ,total_price)
+            cur.execute(insert_sale,sale_data)
+            connect.commit()
+            return {'message':'Sale successful',"remaining quantity": available_quantity},201
         
         except Exception as e:
             print(e)

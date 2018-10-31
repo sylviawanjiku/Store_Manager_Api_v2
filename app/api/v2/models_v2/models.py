@@ -247,6 +247,16 @@ class Product(Data_base):
         )
         self.save()
         self.close()
+
+    # def update_quantity(self,product_name):
+    #     """update an existing product details"""
+
+    #     self.cur.execute(
+    #         """ UPDATE products SET quantity= %s WHERE product_name =%s""",(
+    #         self.quantity,product_name)
+    #     )
+    #     self.save()
+    #     self.close()
     
     def delete(self, product_id):
         """Delete a product"""

@@ -21,7 +21,7 @@ def admin_only(f):
     @wraps(f)
     def decorator_func(*args,**kwargs):
         user = User().fetch_by_username(get_jwt_identity()["username"])
-        if not user.is_admin:
+        if user["is_admin"] == False:
             return {'message': 'unauthorized access, Invalid token'}, 401
         return f(*args, **kwargs)
     return decorator_func
@@ -47,7 +47,7 @@ class Login(Resource):
 
             expiry_time = datetime.timedelta(minutes =25)
             token = create_access_token(
-                identity = user.serialize(),
+                identity = user,
                 expires_delta=expiry_time
                 )
             return{"token":token ,"message":"User successfully logged In"}

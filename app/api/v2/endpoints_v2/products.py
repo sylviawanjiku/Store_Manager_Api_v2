@@ -37,7 +37,7 @@ class Products(Resource):
             my_product = Product(product_name,brand,quantity,price,avail_stock,min_stock,uom,category)
             my_product.add()
 
-            return{"message":"Product added successfully", "product": my_product.serialize()}, 201
+            return{"message":"Product added successfully" }, 201
 
         except Exception as e:
             print(e)

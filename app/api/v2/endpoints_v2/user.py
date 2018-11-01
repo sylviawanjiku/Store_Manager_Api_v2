@@ -8,12 +8,12 @@ from utils import validator
 
 # request data validation
 parser =reqparse.RequestParser()
-parser.add_argument('username',type=str, required=True, help="This field can not be left bank")
-parser.add_argument('email',type=str, required=True, help="This field can not be left bank")
-parser.add_argument('first_name',type=str, required=True, help="This field can not be left bank")
-parser.add_argument('last_name',type=str, required=True, help="This field can not be left bank")
-parser.add_argument('password', required=True, help="This field can not be left bank")
-parser.add_argument('is_admin')
+parser.add_argument('username',type=str, required=True, help="Username cannot blank")
+parser.add_argument('email',type=str, required=True, help="Email cannot be blank")
+parser.add_argument('first_name',type=str, required=True, help="First Name cannot be bank")
+parser.add_argument('last_name',type=str, required=True, help="Last Name cannot be blank")
+parser.add_argument('password', required=True, help="Password cannot be blank")
+parser.add_argument('is_admin', required=True, help="Is_admin cannot be blank")
 
 
 class SignUp(Resource):
@@ -26,6 +26,7 @@ class SignUp(Resource):
             last_name = args.get('last_name')
             password = args.get('password')
             email = args.get('email')
+            is_admin = args.get('is_admin')
           
 
             validate = validator.Validators()
@@ -43,7 +44,7 @@ class SignUp(Resource):
                 return {"message": "Lastname must be a string"}, 400
 
             if not validate.validate_password(password):
-                return{"message":"Password should include a number and start with a capital lettter"}
+                return{"message":"Password should start with a capital letter and include a number"}
 
             if User().fetch_by_email(email):
                 return{"message":"User already exists"},400
@@ -51,10 +52,11 @@ class SignUp(Resource):
             if User().fetch_by_username(username):
                 return{"message":"User already exists"},400
 
-            user =User(username,first_name, last_name, password,email)       
+            user =User(username,first_name, last_name, password,email,is_admin)       
             user.add()
 
             return{"message":"user created successfully"},201
+
 
 
 class Make_Admin(Resource):
@@ -78,4 +80,4 @@ class Make_Admin(Resource):
         except Exception as e:
             print(e)
             return{"message":"Internal server error"}
-        
+

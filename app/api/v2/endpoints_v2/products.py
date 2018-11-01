@@ -74,7 +74,7 @@ class Single_Product(Resource):
             return {
             'message': 'Product not found'
             }, 404
-        id = product[0]
+        id = product["id"]
         Product().delete(id)
         # product.delete(product_id)
         return{"message":"Product successfully deleted"},200

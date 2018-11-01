@@ -92,6 +92,25 @@ class User(Data_base):
             return False
         return False
 
+    def update(self,user_id):
+        """make store attendant admin"""
+        self.cur.execute(
+            """ UPDATE products SET is_admin =%s WHERE id = %s,(user_id,))""",(
+        self.is_admin,user_id)
+        )
+        self.save()
+        self.close()
+
+    def fetch_user_by_id(self,user_id):
+        """fetch a single product by user_id"""
+        self.cur.execute("SELECT * FROM users WHERE id = %s",(user_id,))
+        selected_user = self.cur.fetchone()
+        return selected_user
+        # if selected_product:
+        #     return self.mapped_product(selected_product)
+        # return None
+
+
 
     def mapped_user(self, user_data):
         """Map a user to an object"""
@@ -217,7 +236,7 @@ class Product(Data_base):
         """fetch a single product by product_name"""
         self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
         selected_product = self.cur.fetchone()
-        return selected_product[6]
+        return selected_product["min_stock"]
         # if selected_product:
         #     return self.mapped_product(selected_product)
         # return None
@@ -226,7 +245,8 @@ class Product(Data_base):
         """fetch a single product by product_name"""
         self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
         selected_product = self.cur.fetchone()
-        return selected_product[4]
+        # return selected_product[4]
+        return selected_product["price"]
         # if selected_product:
         #     return self.mapped_product(selected_product)
         # return None
@@ -235,7 +255,8 @@ class Product(Data_base):
         """fetch a single product by product_name"""
         self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
         selected_product = self.cur.fetchone()
-        return selected_product[5]
+        return selected_product["avail_stock"]
+        # return selected_product[5]
         # if selected_product:
         #     return self.mapped_product(selected_product)
         # return None
@@ -335,7 +356,7 @@ class Sales(Data_base):
         self.close()
         return sales
 
-    def fetch_all_sales_attendant_name(self,attendant_name):
+    def fetch_all_sales_attendant_name(self,username):
         """ fetch all sales """
         self.cur.execute("SELECT * FROM sales")
         sales = self.cur.fetchall()        

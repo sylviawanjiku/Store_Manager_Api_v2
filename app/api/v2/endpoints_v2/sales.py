@@ -32,15 +32,19 @@ class Sale(Resource):
         
         attendant_name = get_jwt_identity()["username"]
         product = Product().fetch_by_name(product_name)
+        
         if not product:
             return {
             'message': 'Product not found'
             }, 404
         min_stock = Product().fetch_min_stock(product_name)
+      
         price = Product().fetch_product_price(product_name)
+     
         available_quantity = Product().fetch_available_quantity(product_name)
-        if quantity <= min_stock:
-            return{"message":"Products running out of stock"}
+   
+        # if min_stock <= quantity:
+        #     return{"message":"Products running out of stock"}
         if quantity > available_quantity:
             return{"message":"Product is out of stock"}        
         available_quantity = available_quantity - quantity 
@@ -72,18 +76,20 @@ class Get_Sales_Admin(Resource):
     def get(self):
         """Get all sales"""
         sales_list = Sales().fetch_all_sales()
+        print(sales_list) 
         if not sales_list:
             return {
             'message': 'The sales list is empty'
             }, 200       
-        return {"message":"success","sales": sales_list},200
+        return {"message":"sales successfully retrieved","sales": sales_list},200
 
 class Get_Sales_Attendant(Resource):
     @jwt_required
     def get(self):
         """Get all sales"""
+        attendant_name = get_jwt_identity()
         sales_list = Sales().fetch_all_sales_attendant_name(get_jwt_identity()["username"])
-        if not sales_list:
+        if sales_list["attendant_name"] == attendant_name:
             return {
             'message': 'The sales list is empty'
             }, 200       

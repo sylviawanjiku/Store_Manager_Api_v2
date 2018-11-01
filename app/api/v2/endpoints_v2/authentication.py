@@ -22,7 +22,7 @@ def admin_only(f):
     def decorator_func(*args,**kwargs):
         user = User().fetch_by_username(get_jwt_identity()["username"])
         if user["is_admin"] == False:
-            return {'message': 'unauthorized access, Invalid token'}, 401
+            return {'message': 'Invalid token,unauthorized access '}, 401
         return f(*args, **kwargs)
     return decorator_func
     
@@ -41,16 +41,13 @@ class Login(Resource):
 
             if not user:
                 return{"message":"User not found"},404
-
-            # if not check_password_hash(user.hash_password, password):
-            #     return {'message': 'incorrect password'}, 401
-
+                
             expiry_time = datetime.timedelta(minutes =25)
             token = create_access_token(
                 identity = user,
                 expires_delta=expiry_time
                 )
-            return{"token":token ,"message":"User successfully logged In"}
+            return{"token":token ,"message":"User successfully logged In"},200
     
 class Logout(Resource):
     @jwt_required

@@ -57,20 +57,27 @@ class SignUp(Resource):
 
             return{"message":"user created successfully"},201
 
-# class Make_Admin(Resource):
-#     @jwt_required
-#     @admin_only
-#     def put(self, user_id):
-#         """Update a single user details"""
-#         args = parser.parse_args()
-#         is_admin = args['is_admin']
-#         user = User(is_admin)
-#         user = User().fetch_user_by_id(user_id)
-#         return user
-#             # user = User(is_admin)
-#         #     print(user)
-#         #     user.update(user_id)
-#         #     return{"message":"User updated successfully updated"},200
-#         # return{"message":"User not found"},404
-        
-          
+
+
+class Make_Admin(Resource):
+    @jwt_required
+    @admin_only
+    def post(self, user_id):
+        """Update a single user details"""
+
+        username = get_jwt_identity()["username"]
+        user = User().fetch_by_username(username)
+        # return user
+        admin_id = user['id']
+
+        store_attendant =User().fetch_by_id(admin_id)
+     
+        if store_attendant["is_admin"] != True:
+            return{"message":"Store attendant cannot be found"}
+        try:
+            User().make_admin(user_id)
+            return{"message":"Store attendant status changed to admin!"}
+        except Exception as e:
+            print(e)
+            return{"message":"Internal server error"}
+

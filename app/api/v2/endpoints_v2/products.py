@@ -44,7 +44,6 @@ class Products(Resource):
             return {'message':'Internal server error'},500
 
     @jwt_required
-    @admin_only
     def get(self):
         """Get all products"""
         products_list = Product().fetch_all_products()
@@ -53,11 +52,10 @@ class Products(Resource):
             'message': 'The product list is empty'
             }, 200       
         # return {"message":"success","products":[product.serialize() for product in products_list]},200
-        return {"message":"success","products": products_list},200
+        return {"message":"Products retrieved successfully","products": products_list},200
 
 class Single_Product(Resource):
-    @jwt_required
-    @admin_only
+    @jwt_required    
     def get(self,product_id):
         """Get single product"""
         product = Product().fetch_by_id(product_id)
@@ -65,7 +63,7 @@ class Single_Product(Resource):
              return {
             'message': 'Product not found'
             }, 404
-        return {"message":"success","product":product },200
+        return {"message":"Product retrieved successfully","product":product },200
 
     @jwt_required
     @admin_only

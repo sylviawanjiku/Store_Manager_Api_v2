@@ -33,11 +33,14 @@ class Products(Resource):
         min_stock =args['min_stock']
         uom =args['uom']
         category = args['category']
+
+        if Product().fetch_by_name(product_name):
+                return{"message":"Product already exists"}
         try:
             my_product = Product(product_name,brand,quantity,price,avail_stock,min_stock,uom,category)
             my_product.add()
-
-            return{"message":"Product added successfully" }, 201
+            return {"message":"Product added successfully",
+                    }, 201 
 
         except Exception as e:
             print(e)
@@ -74,7 +77,7 @@ class Single_Product(Resource):
             return {
             'message': 'Product not found'
             }, 404
-        id = product[0]
+        id = product["id"]
         Product().delete(id)
         # product.delete(product_id)
         return{"message":"Product successfully deleted"},200

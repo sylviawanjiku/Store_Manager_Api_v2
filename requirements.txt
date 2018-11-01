@@ -17,6 +17,7 @@ Flask-API==1.0
 Flask-JWT-Extended==3.13.1
 Flask-RESTful==0.3.6
 flask-restplus==0.12.1
+Flask-Script==2.0.6
 funcsigs==1.0.2
 gunicorn==19.9.0
 idna==2.7
@@ -32,9 +33,9 @@ more-itertools==4.3.0
 passlib==1.7.1
 pathlib2==2.3.2
 pep8==1.7.1
-pkg-resources==0.0.0
 pluggy==0.7.1
 psycopg2==2.7.5
+psycopg2-binary==2.7.5
 py==1.7.0
 pycparser==2.19
 PyJWT==1.6.4

@@ -42,3 +42,5 @@ class TestUser(unittest.TestCase):
         '''Test for empty username'''
         new_user = self.client().post('/api/v1/users',data = self.user_data_empty_username)       
         self.assertEqual(new_user.status_code, 400)
+if __name__=='__main__':
+    unittest.main()

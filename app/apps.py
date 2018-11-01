@@ -4,6 +4,7 @@ from .api.v1 import version1 as v1
 from .api.v2 import version2 as v2
 from flask_jwt_extended import JWTManager
 from .api.v2.endpoints_v2.authentication import blacklist
+from .api.v2.endpoints_v2.v2_home import home
 from instance.config import app_config
 
 # The create_app function wraps the creation of a new Flask object, and returns it after it's loaded up with configuration settings
@@ -16,6 +17,7 @@ def create_app(config_name):
     app.config.from_pyfile('config.py')
     app.register_blueprint(v1)
     app.register_blueprint(v2)
+    app.register_blueprint(home)
 # jwt initialization
     app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
     app.config['JWT_BLACKLIST_ENABLED'] = True

@@ -33,11 +33,14 @@ class Products(Resource):
         min_stock =args['min_stock']
         uom =args['uom']
         category = args['category']
+
+        if Product().fetch_by_name(product_name):
+                return{"message":"Product already exists"}
         try:
             my_product = Product(product_name,brand,quantity,price,avail_stock,min_stock,uom,category)
             my_product.add()
-
-            return{"message":"Product added successfully" }, 201
+            return {"message":"Product added successfully",
+                    "product": my_product.serialize()}, 201 
 
         except Exception as e:
             print(e)
@@ -97,6 +100,6 @@ class Update_Product(Resource):
         if Product().fetch_by_id(product_id):
             my_product = Product(product_name,brand,quantity,price,avail_stock,min_stock,uom,category)
             my_product.update(product_id)
-            return{"message":"Product updated successfully updated"},200
+            return{"message":"Product updated successfully updated","product":my_product.serialize()},200
         return{"message":"Product not found"},404
         

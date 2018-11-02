@@ -44,8 +44,7 @@ class Sale(Resource):
      
         available_quantity = Product().fetch_available_quantity(product_name)
    
-        # if min_stock <= quantity:
-        #     return{"message":"Products running out of stock"}
+     
         if quantity > available_quantity:
             return{"message":"Product is out of stock"}        
         available_quantity = available_quantity - quantity 
@@ -54,9 +53,7 @@ class Sale(Resource):
             """ UPDATE products SET avail_stock= %s WHERE product_name =%s""",(available_quantity,product_name))
         connect.commit()
        
-        # if available_quantity <= min_stock:
-        #     return{"message":"Products running out of stock"} 
-
+     
         try:                         
             total_price = price * quantity
             """Add a sale to the created table products """

@@ -40,7 +40,7 @@ class TestUser(unittest.TestCase):
     def test_register_user(self):
         '''Test API can create a new user (POST request)'''
         login = self.client.post("api/v2/login",content_type = 'application/json',data = json.dumps(self.admin_login))
-        created_token = json.loads(login.data.decode())["access_token"]
+        created_token = json.loads(login.data.decode())["token"]
         new_user = self.client.post('/api/v2/signup',data=json.dumps(self.user_data),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))    
         response = json.loads(new_user.data.decode())
         self.assertEqual(response['message'], "user created successfully")
@@ -50,7 +50,7 @@ class TestUser(unittest.TestCase):
     def test_user_with_invalid_email_registration(self):
         """Test for invalid email"""
         login = self.client.post("api/v2/login",content_type = 'application/json',data = json.dumps(self.admin_login))
-        created_token = json.loads(login.data.decode())["access_token"]
+        created_token = json.loads(login.data.decode())["token"]
         new_user = self.client.post('/api/v2/signup',data = json.dumps(self.register_user_without_valid_email),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))     
         result = json.loads(new_user.data.decode())
         self.assertEqual(result ['message'], "enter valid email")
@@ -60,7 +60,7 @@ class TestUser(unittest.TestCase):
     def test_register_user_with_invalid_firstname(self):
         """Test for invalid firstname"""
         login = self.client.post("api/v2/login",content_type = 'application/json',data = json.dumps(self.admin_login))
-        created_token = json.loads(login.data.decode())["access_token"]
+        created_token = json.loads(login.data.decode())["token"]
         new_user = self.client.post('/api/v2/signup',data = json.dumps(self.register_user_with_invalid_firstname),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))     
         result = json.loads(new_user.data.decode())
         self.assertEqual(result ['message'], "username must be a string")
@@ -72,7 +72,7 @@ class TestUser(unittest.TestCase):
     def test_register_user_with_invalid_lastname(self):
         """Test for invalid lastname"""
         login = self.client.post("api/v2/login",content_type = 'application/json',data = json.dumps(self.admin_login))
-        created_token = json.loads(login.data.decode())["access_token"]
+        created_token = json.loads(login.data.decode())["token"]
         new_user = self.client.post('/api/v2/signup',data = json.dumps(self.register_user_with_invalid_lastname),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))     
         result = json.loads(new_user.data.decode())
         self.assertEqual(result ['message'], "Lastname must be a string")
@@ -82,7 +82,7 @@ class TestUser(unittest.TestCase):
     def test_register_user_with_invalid_username(self):
         """Test for empty username"""
         login = self.client.post("api/v2/login",content_type = 'application/json',data = json.dumps(self.admin_login))
-        created_token = json.loads(login.data.decode())["access_token"]
+        created_token = json.loads(login.data.decode())["token"]
         new_user = self.client.post('/api/v2/signup',data = json.dumps(self.register_user_with_invalid_username),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))         
         result = json.loads(new_user.data.decode())
         self.assertEqual(result ['message'], "username must be a string")
@@ -92,7 +92,7 @@ class TestUser(unittest.TestCase):
     def test_register_user_with_invalid_password(self):
         """Test for invalid password"""
         login = self.client.post("api/v2/login",content_type = 'application/json',data = json.dumps(self.admin_login))
-        created_token = json.loads(login.data.decode())["access_token"]
+        created_token = json.loads(login.data.decode())["token"]
         new_user = self.client.post('/api/v2/signup',data = json.dumps(self.register_user_with_invalid_password),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))         
         result = json.loads(new_user.data.decode())
         self.assertEqual(result ['message'], "Password should start with a capital letter and include a number")

@@ -14,13 +14,9 @@ class Data_base:
         self.db_password = current_app.config['DB_PASSWORD']
         self.db_name = current_app.config['DB_NAME']
 
-        # connect to the storemanager database
-        self.connect = psycopg2.connect(
-            host=self.db_host,
-            user=self.db_username,
-            password=self.db_password,
-            database=self.db_name
-        )
+      
+        DATABASE_URL = os.environ['DATABASE_URL']
+        self.connect = psycopg2.connect(DATABASE_URL, sslmode='require')
         # open cursor for performing database operations
         self.cur =self.connect.cursor(cursor_factory =extras.RealDictCursor)
         # self.cur =self.connect.cursor()

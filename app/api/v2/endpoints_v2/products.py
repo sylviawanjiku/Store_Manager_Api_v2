@@ -55,7 +55,7 @@ class Products(Resource):
              return {
             'message': 'The product list is empty'
             }, 200       
-        # return {"message":"success","products":[product.serialize() for product in products_list]},200
+      
         return {"message":"Products retrieved successfully","products": products_list},200
 
 class Single_Product(Resource):
@@ -80,7 +80,7 @@ class Single_Product(Resource):
             }, 404
         id = product["id"]
         Product().delete(id)
-        # product.delete(product_id)
+    
         return{"message":"Product successfully deleted"},200
 
 class Update_Product(Resource):

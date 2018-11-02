@@ -114,9 +114,7 @@ class User(Data_base):
         self.cur.execute("SELECT * FROM users WHERE id = %s",(user_id,))
         selected_user = self.cur.fetchone()
         return selected_user
-        # if selected_product:
-        #     return self.mapped_product(selected_product)
-        # return None
+       
 
 
 
@@ -138,18 +136,14 @@ class User(Data_base):
         self.cur.execute("SELECT * FROM users WHERE email =%s", (email,))
         selected_user = self.cur.fetchone()
         return selected_user
-        # if selected_user:
-        #     return self.mapped_user(selected_user)
-        # return None
+       
 
     def fetch_by_username(self,username):
         "Fetch a user through username"
         self.cur.execute("SELECT * FROM users WHERE username =%s", (username,))
         selected_user = self.cur.fetchone()
         return selected_user
-        # if selected_user:
-        #     return self.mapped_user(selected_user)
-        # return None
+        
 
     def fetch_by_id(self,user_id):
         "Fetch a user through id"
@@ -232,9 +226,7 @@ class Product(Data_base):
         self.cur.execute("SELECT * FROM products WHERE id = %s",(product_id,))
         selected_product = self.cur.fetchone()
         return selected_product
-        # if selected_product:
-        #     return self.mapped_product(selected_product)
-        # return None
+        
 
       
     def fetch_by_name(self,product_name):
@@ -242,36 +234,27 @@ class Product(Data_base):
         self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
         selected_product = self.cur.fetchone()
         return selected_product
-        # if selected_product:
-        #     return self.mapped_product(selected_product)
-        # return None
+       
 
     def fetch_min_stock(self,product_name):
         """fetch a single product by product_name"""
         self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
         selected_product = self.cur.fetchone()
         return selected_product["min_stock"]
-        # if selected_product:
-        #     return self.mapped_product(selected_product)
-        # return None
+       
 
     def fetch_product_price(self,product_name):
         """fetch a single product by product_name"""
         self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
         selected_product = self.cur.fetchone()
         return selected_product["price"]
-        # if selected_product:
-        #     return self.mapped_product(selected_product)
-        # return None
-
+       
     def fetch_available_quantity(self,product_name):
         """fetch a single product by product_name"""
         self.cur.execute("SELECT * FROM products WHERE product_name = %s",(product_name,))
         selected_product = self.cur.fetchone()
         return selected_product["avail_stock"]
-        # if selected_product:
-        #     return self.mapped_product(selected_product)
-        # return None
+        
 
     def fetch_all_products(self):
         """ fetch all products"""
@@ -281,9 +264,6 @@ class Product(Data_base):
         self.close()
         return products
       
-        # if products:
-        #     return [self.mapped_product(product) for product in products]
-        # return None
 
     def update(self, product_id):
         """update an existing product details"""
@@ -297,16 +277,7 @@ class Product(Data_base):
         self.save()
         self.close()
 
-    # def update_quantity(self,product_name):
-    #     """update an existing product details"""
-
-    #     self.cur.execute(
-    #         """ UPDATE products SET quantity= %s WHERE product_name =%s""",(
-    #         self.quantity,product_name)
-    #     )
-    #     self.save()
-    #     self.close()
-    
+     
     def delete(self, product_id):
         """Delete a product"""
         self.cur.execute("DELETE FROM products where id = %s",(product_id,))
@@ -380,8 +351,7 @@ class Sales(Data_base):
 
     def serialize(self):
         """put the product data in form of a dictionary"""
-        return dict(  
-            # id =self.id,        
+        return dict(        
             attendant_name =  self.attendant_name,
             product_name =  self.product_name,
             quantity =  self.quantity,

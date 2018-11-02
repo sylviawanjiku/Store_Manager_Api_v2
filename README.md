@@ -1,5 +1,7 @@
 # StoreManager_Api_v2
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/52b721cf5ded5b0a4e67/maintainability)](https://codeclimate.com/github/sylviawanjiku/Store_Manager_Api_v2/maintainability)
+
 Store Manager is an app that allows users to control sales and inventory.
 The store manager app has two type of users store attendant and store owner(admin).
 Each of the two users have their indivindual roles to play but in this case what the store attendant can do the admin can also do.

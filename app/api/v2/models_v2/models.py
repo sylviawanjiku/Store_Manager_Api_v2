@@ -1,9 +1,10 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import psycopg2
-from psycopg2 import extras,connect
+from psycopg2 import extras, connect
 # local imports
 from flask import current_app
+
 
 class Data_base:
     """"database connection model"""
@@ -14,19 +15,23 @@ class Data_base:
         self.db_password = current_app.config['DB_PASSWORD']
         self.db_name = current_app.config['DB_NAME']
 
-      
-        DATABASE_URL = os.environ['DATABASE_URL']
-        self.connect = psycopg2.connect(DATABASE_URL, sslmode='require')
+        # connect to the storemanager database
+        self.connect = psycopg2.connect(
+            host=self.db_host,
+            user=self.db_username,
+            password=self.db_password,
+            database=self.db_name
+        )
         # open cursor for performing database operations
-        self.cur =self.connect.cursor(cursor_factory =extras.RealDictCursor)
+        self.cur = self.connect.cursor(cursor_factory=extras.RealDictCursor)
         # self.cur =self.connect.cursor()
 
-    def create_table(self,schema):
+    def create_table(self, schema):
         """method for creating tables"""
         self.cur.execute(schema)
         self.save()
 
-    def drop_table(self,name):
+    def drop_table(self, name):
         """method for dropping tables"""
         self.cur.execute("DROP TABLE IF EXISTS " + name)
         self.save()
@@ -39,14 +44,16 @@ class Data_base:
         """method for closing the cursor"""
         self.cur.close()
 
+
 class User(Data_base):
 
-    def __init__(self,username=None,first_name=None,last_name = None,password = None,email = None ,is_admin = False):
+    def __init__(self, username=None, first_name=None, last_name=None,
+                 password=None, email=None, is_admin=False):
         super().__init__()
         self.username = username
         self.first_name = first_name
         self.last_name = last_name
-        if password:    
+        if password:
             self.hash_password = generate_password_hash(password)
         self.email = email
         self.is_admin = is_admin
@@ -61,30 +68,30 @@ class User(Data_base):
                 first_name VARCHAR NOT NULL,
                 last_name VARCHAR NOT NULL,
                 password VARCHAR NOT NULL,
-                email  VARCHAR NOT NULL,                
+                email  VARCHAR NOT NULL,
                 is_admin BOOLEAN NOT NULL
             );
         """
         )
 
     def drop(self):
-        """Drop the table for users if it exists""" 
+        """Drop the table for users if it exists"""
         self.drop_table('users')
 
     def add(self):
         """Add a user to the created table users"""
         insert_user = "INSERT INTO users(username,first_name,last_name,password,email,is_admin) VALUES( %s, %s, %s, %s, %s, %s)"
-        user_data = (self.username, self.first_name, self.last_name ,self.hash_password ,self.email,self.is_admin)
-        self.cur.execute(insert_user,user_data)
+        user_data = (self.username, self.first_name, self.last_name, self.hash_password, self.email, self.is_admin)
+        self.cur.execute(insert_user, user_data)
         self.save()
 
-    def make_admin(self,user_id):
+    def make_admin(self, user_id):
         is_admin = True
         self.cur.execute("""UPDATE users  SET is_admin='{}'  WHERE id='{}' """.format(is_admin,user_id))
         self.save()
         self.close()
            
-    def is_admin(self,username):
+    def is_admin(self, username):
         self.cur.execute("SELECT * FROM users WHERE username =%s", (username,))
         selected_user = self.cur.fetchone()
         if selected_user:
@@ -93,16 +100,16 @@ class User(Data_base):
             return False
         return False
 
-    def update(self,user_id):
+    def update(self, user_id):
         """make store attendant admin"""
         self.cur.execute(
             """ UPDATE products SET is_admin =%s WHERE id = %s,(user_id,))""",(
-        self.is_admin,user_id)
+        self.is_admin, user_id)
         )
         self.save()
         self.close()
 
-    def fetch_user_by_id(self,user_id):
+    def fetch_user_by_id(self, user_id):
         """fetch a single product by user_id"""
         self.cur.execute("SELECT * FROM users WHERE id = %s",(user_id,))
         selected_user = self.cur.fetchone()
@@ -278,12 +285,14 @@ class Product(Data_base):
         #     return [self.mapped_product(product) for product in products]
         # return None
 
-    def update(self,product_id):
+    def update(self, product_id):
         """update an existing product details"""
 
         self.cur.execute(
-            """ UPDATE products SET product_name =%s, brand= %s,quantity= %s,price = %s, avail_stock = %s, min_stock = %s, uom = %s,category= %s WHERE id =%s""",(
-            self.product_name,self.brand,self.quantity,self.price,self.avail_stock,self.min_stock,self.uom,self.category,product_id)
+            """ UPDATE products SET product_name =%s, brand= %s,quantity= %s,
+            price = %s, avail_stock = %s, min_stock = %s, uom = %s,category= %s
+            WHERE id =%s""", (elf.product_name, self.brand, self.quantity,
+            self.price, self.avail_stock, self.min_stock, self.uom, self.category,product_id)
         )
         self.save()
         self.close()

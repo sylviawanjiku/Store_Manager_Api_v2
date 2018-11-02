@@ -1,6 +1,6 @@
 import os
 from app.apps import create_app
-from app.api.v2.models_v2.models import Data_base, User, Product
+from app.api.v2.models_v2.models import Data_base, User, Product ,Sales
 
 app = create_app("testing")
 
@@ -9,12 +9,14 @@ def migrate():
     """Creating tables for testing"""
     User().create()
     Product().create()
+    Sales().create()
 
 
 def drop():
     """ drop tables if they exist """
     User().drop()
     Product().drop()
+    Sales().drop()
 
 
 # add admin to db

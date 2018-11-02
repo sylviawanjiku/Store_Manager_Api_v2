@@ -45,7 +45,7 @@ class TestProducts(unittest.TestCase):
         login = self.client.post("api/v2/login", 
                                 content_type='application/json',
                                  data=json.dumps(self.admin_login))
-        created_token = json.loads(login.data.decode())["access_token"]
+        created_token = json.loads(login.data.decode())["token"]
         post_product =self.client.post('/api/v2/products',data=json.dumps(self.products_data),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))
         res = json.loads(post_product.data.decode())
         self.assertEqual(res['message'],  "Product added successfully")
@@ -56,7 +56,7 @@ class TestProducts(unittest.TestCase):
 
         reg = self.client.post("api/v2/signup",content_type = 'application/json',data = json.dumps(self.user_data))
         login = self.client.post("api/v2/login",content_type = 'application/json',data = json.dumps(self.user_login))
-        created_token = json.loads(login.data.decode())["access_token"]
+        created_token = json.loads(login.data.decode())["token"]
         post_product =self.client.post('/api/v2/products',data=json.dumps(self.products_data),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))  
         res = json.loads(post_product.data.decode())
         self.assertEqual(res['message'],  "Invalid token ,unauthorized access ")
@@ -65,7 +65,7 @@ class TestProducts(unittest.TestCase):
     def test_api_can_get_all_products(self):
         reg = self.client.post("api/v2/signup",content_type = 'application/json',data = json.dumps(self.user_data))
         login = self.client.post("api/v2/login",content_type = 'application/json',data = json.dumps(self.user_login))
-        created_token = json.loads(login.data.decode())["access_token"]
+        created_token = json.loads(login.data.decode())["token"]
         post_product =self.client.post('/api/v2/products',data=json.dumps(self.products_data),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))  
         res = json.loads(post_product.data.decode())
         self.assertEqual(res['message'],  "Product added successfully")
@@ -81,7 +81,7 @@ class TestProducts(unittest.TestCase):
         """Test API can get a single product (GET<id> request)."""
         reg = self.client.post("api/v2/signup",content_type = 'application/json',data = json.dumps(self.user_data))
         login = self.client.post("api/v2/login",content_type = 'application/json',data = json.dumps(self.user_login))
-        created_token = json.loads(login.data.decode())["access_token"]
+        created_token = json.loads(login.data.decode())["token"]
         post_product =self.client.post('/api/v2/products',data=json.dumps(self.products_data),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))  
         res = json.loads(post_product.data.decode())
         self.assertEqual(res['message'],  "Product added successfully")
@@ -96,7 +96,7 @@ class TestProducts(unittest.TestCase):
         """Test API can get a single product (GET<id> request)."""
         reg = self.client.post("api/v2/signup",content_type = 'application/json',data = json.dumps(self.user_data))
         login = self.client.post("api/v2/login",content_type = 'application/json',data = json.dumps(self.user_login))
-        created_token = json.loads(login.data.decode())["access_token"]
+        created_token = json.loads(login.data.decode())["token"]
         post_product =self.client.post('/api/v2/products',data=json.dumps(self.products_data),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))  
         res = json.loads(post_product.data.decode())
         self.assertEqual(res['message'],  "Product added successfully")

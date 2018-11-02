@@ -23,7 +23,7 @@ class TestSales(unittest.TestCase):
         '''Test API can create a sale record (POST request)'''
         reg = self.client.post("api/v2/signup",content_type = 'application/json',data = json.dumps(self.user_data))
         login = self.client.post("api/v2/login",content_type = 'application/json',data = json.dumps(self.user_login))
-        created_token = json.loads(login.data.decode())["access_token"]
+        created_token = json.loads(login.data.decode())["token"]
         post_product =self.client.post('/api/v2/products',data=json.dumps(self.products_data),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))
         res = json.loads(post_product.data.decode())
         self.assertEqual(res['message'],  "Product added successfully")
@@ -38,7 +38,7 @@ class TestSales(unittest.TestCase):
         """Test API can create a sale record (POST request)"""
         reg = self.client.post("api/v2/signup",content_type = 'application/json',data = json.dumps(self.admin_data))
         login = self.client.post("api/v2/login",content_type = 'application/json',data = json.dumps(self.admin_login))
-        created_token = json.loads(login.data.decode())["access_token"]
+        created_token = json.loads(login.data.decode())["token"]
         post_product =self.client.post('/api/v2/products',data=json.dumps(self.products_data),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))
         res = json.loads(post_product.data.decode())
         self.assertEqual(res['message'],  "Product added successfully")
@@ -54,20 +54,6 @@ class TestSales(unittest.TestCase):
         self.assertEqual(res_prod['message'],  "sales successfully retrieved")
         self.assertEqual(get_all_sales.status_code,200)
     
-    # def test_attendant_can_get_personal_sales(self):
-    #     '''Test API can create a sale record (POST request)'''
-    #     reg = self.client.post("api/v2/signup",content_type = 'application/json',data = json.dumps(self.user_data))
-    #     login = self.client.post("api/v2/login",content_type = 'application/json',data = json.dumps(self.user_login))
-    #     created_token = json.loads(login.data.decode())["access_token"]
-    #     post_product =self.client.post('/api/v2/products',data=json.dumps(self.products_data),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))
-    #     res = json.loads(post_product.data.decode())
-    #     self.assertEqual(res['message'],  "Product added successfully")
-    #     self.assertEqual(post_product.status_code,201)
-        
-    #     make_sale =self.client.post('/api/v2/sales',data=json.dumps(self.sales_data),content_type = 'application/json',headers =dict(Authorization = "Bearer{}".format(created_token)))
-    #     res = json.loads(make_sale.data.decode())
-    #     self.assertEqual(res['message'],  "Sale successful")
-    #     self.assertEqual(make_sale.status_code,201)
 
 if __name__=='__main__':
         unittest.main()

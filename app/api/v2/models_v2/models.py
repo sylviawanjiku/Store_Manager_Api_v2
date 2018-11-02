@@ -1,4 +1,4 @@
-from werkzeug.security import generate_password_hash,check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 import psycopg2
 from psycopg2 import extras,connect
@@ -18,8 +18,8 @@ class Data_base:
         self.connect = psycopg2.connect(
             host=self.db_host,
             user=self.db_username,
-            password =self.db_password,
-            database =self.db_name
+            password=self.db_password,
+            database=self.db_name
         )
         # open cursor for performing database operations
         self.cur =self.connect.cursor(cursor_factory =extras.RealDictCursor)

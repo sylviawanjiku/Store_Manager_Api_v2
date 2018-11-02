@@ -2,7 +2,7 @@ from flask import Flask, make_response, jsonify, request
 from ...v2.models_v2.models import Product,Data_base ,Sales
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import (jwt_required, create_access_token,get_jwt_identity)
-from .authentication import admin_only
+from .authentication import admin_only,attendant_only
 from functools import wraps
 from .products import Single_Product
 from psycopg2 import extras,connect
@@ -24,6 +24,7 @@ parser.add_argument('quantity',required=True, help='quantity cannot be blank', t
 
 class Sale(Resource):
     @jwt_required
+    @attendant_only
     def post(self):
         """Posting items to sales"""       
         args = parser.parse_args()

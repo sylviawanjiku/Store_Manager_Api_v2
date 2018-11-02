@@ -4,5 +4,5 @@ import os
 
 app = create_app(os.getenv('FLASK_ENV'))
 
-if __ name _ == '__main__':
+if __name__ == '__main__':
     app.run(debug=True)

@@ -25,6 +25,16 @@ def admin_only(f):
             return {'message': 'Invalid token,unauthorized access '}, 401
         return f(*args, **kwargs)
     return decorator_func
+
+def attendant_only(f):
+    ''' Deny access if the user is not admin '''
+    @wraps(f)
+    def decorator_func(*args,**kwargs):
+        user = User().fetch_by_username(get_jwt_identity()["username"])
+        if user["is_admin"] == True:
+            return {'message': 'Invalid token,unauthorized access '}, 401
+        return f(*args, **kwargs)
+    return decorator_func
     
 class Login(Resource):
 

@@ -7,7 +7,7 @@ from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_r
 
 
 # request data validation
-parser =reqparse.RequestParser()
+parser = reqparse.RequestParser()
 
 parser.add_argument('attendant_name', required=True, help='attendant_name cannot be blank', type=str)
 parser.add_argument('product_name', required=True, help='product_name cannot be blank', type=str)
@@ -26,7 +26,7 @@ class SalesRecord(Resource):
         price = args['price']
         total_price = args['total_price']
         quantity = args['quantity']
-        product_list=Product.products
+        product_list = Product.products
         product =[product for product in product_list if product['product_name']==product_name]
         if not product:
             return {"message":"Product does not exist"}
@@ -34,7 +34,7 @@ class SalesRecord(Resource):
         if product[0]['quantity']<0:
             return{"message":"Product is out of stock"}
         try:
-            my_new_sale = Sale(attendant_name,product_name,price,total_price,quantity)
+            my_new_sale = Sale(attendant_name, product_name, price, total_price, quantity)
             new_sale = my_new_sale.post_sale()
             return make_response(jsonify({
                     'sale': new_sale
